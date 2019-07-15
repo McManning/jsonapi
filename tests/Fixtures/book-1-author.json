@@ -1,0 +1,19 @@
+{
+    "jsonapi": {
+        "version": "1.0"
+    },
+    "data": {
+        "type": "author",
+        "id": "1",
+        "attributes": {
+            "email": "adams@example.com",
+            "firstName": "Douglas",
+            "lastName": "Adams"
+        },
+        "relationships": {
+            "books": {
+
+            }
+        }
+    }
+}

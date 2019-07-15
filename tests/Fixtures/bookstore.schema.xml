@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<database name="default" defaultIdMethod="native" defaultPhpNamingMethod="nochange">
+    <table name="Book" description="Book Table">
+        <column name="id" required="true" primaryKey="true" autoIncrement="true" type="INTEGER" description="Book Id" />
+
+        <column name="title" type="VARCHAR" required="true" description="Book Title" primaryString="true" />
+        <column name="isbn" phpName="ISBN" required="true" type="VARCHAR" size="24" description="ISBN Number" primaryString="false" />
+        <column name="price" required="false" type="FLOAT" description="Price of the book." />
+        <column name="publisherId" required="false" type="INTEGER" description="Foreign Key Publisher" />
+        <column name="authorId" required="false" type="INTEGER" description="Foreign Key Author" />
+
+        <foreign-key foreignTable="Publisher" onDelete="setnull">
+            <reference local="publisherId" foreign="id" />
+        </foreign-key>
+
+        <foreign-key foreignTable="Author" onDelete="setnull" onUpdate="cascade">
+            <reference local="authorId" foreign="id" />
+        </foreign-key>
+
+        <behavior name="jsonapi" />
+    </table>
+
+    <table name="Publisher" description="Publisher Table" defaultStringFormat="XML">
+        <column name="id" required="true" primaryKey="true" autoIncrement="true" type="INTEGER" description="Publisher Id" />
+        <column name="name" required="true" type="VARCHAR" size="128" default="Penguin" description="Publisher Name" />
+
+        <behavior name="jsonapi" />
+    </table>
+
+    <table name="Author" description="Author Table">
+        <column name="id" required="true" primaryKey="true" autoIncrement="true" type="INTEGER" description="Author Id" />
+        <column name="firstName" required="true" type="VARCHAR" size="128" description="First Name" />
+        <column name="lastName" required="true" type="VARCHAR" size="128" description="Last Name" />
+        <column name="email" type="VARCHAR" size="128" description="E-Mail Address" />
+        <column name="age" type="INTEGER" description="The authors age" />
+        <column name="address" type="VARCHAR" size="128" description="The authors home address" />
+
+        <behavior name="jsonapi">
+            <parameter name="exclude_attributes" value="age,address" />
+        </behavior>
+    </table>
+
+    <!-- Test a private relationship that is not exposed by the API -->
+    <table name="AuthorFinancials" description="Aggregate sales and payout for an Author">
+        <column name="id" required="true" primaryKey="true" autoIncrement="true" type="INTEGER" />
+        <column name="authorId" required="false" type="INTEGER" description="Foreign Key Author" />
+
+        <column name="quarter" type="VARCHAR" size="128" description="Quarter code. E.g. Q1 2019" />
+        <column name="totalBooksSold" type="INTEGER" />
+        <column name="totalSales" type="FLOAT" />
+        <column name="authorEarningsPercentage" type="FLOAT" />
+
+        <foreign-key foreignTable="Author" onDelete="setnull" onUpdate="cascade">
+            <reference local="authorId" foreign="id" />
+        </foreign-key>
+    </table>
+
+    <!-- Test many-to-many relationships -->
+    <table name="BookClubList" description="Reading list for a book club.">
+        <column name="id" required="true" primaryKey="true" autoIncrement="true" type="INTEGER" description="Unique ID for a school reading list." />
+        <column name="groupLeader" required="true" type="VARCHAR" size="100" description="The name of the teacher in charge of summer reading." />
+        <column name="theme" required="false" type="VARCHAR" size="50" description="The theme, if applicable, for the reading list." />
+
+        <behavior name="jsonapi" />
+    </table>
+
+    <table name="BookCrossBookClubList" isCrossRef="true"
+        description="Cross-reference table between book and BookClubList rows.">
+        <column name="bookId" primaryKey="true" type="INTEGER" description="Fkey to book.id" />
+        <column name="bookClubListId" primaryKey="true" type="INTEGER" description="Fkey to BookClubList.id" />
+
+        <foreign-key foreignTable="Book" onDelete="cascade">
+            <reference local="bookId" foreign="id" />
+        </foreign-key>
+        <foreign-key foreignTable="BookClubList" onDelete="cascade">
+            <reference local="bookClubListId" foreign="id" />
+        </foreign-key>
+
+        <behavior name="jsonapi" />
+    </table>
+
+    <!-- Test renamed relationships -->
+    <table name="BookSummary">
+        <column name="id" required="true" primaryKey="true" autoIncrement="true" type="INTEGER" />
+        <column name="summary" required="true" type="LONGVARCHAR" />
+
+        <foreign-key phpName="summarizedBook" refPhpName="summary" foreignTable="Book" onDelete="cascade">
+            <reference local="id" foreign="id" />
+        </foreign-key>
+
+        <behavior name="jsonapi" />
+    </table>
+
+</database>

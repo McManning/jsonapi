@@ -1,0 +1,43 @@
+{
+    "jsonapi": {
+        "version": "1.0"
+    },
+    "data": [{
+        "type": "book",
+        "id": "1",
+        "attributes": {
+            "ISBN": "ISBN-1",
+            "price": 29.99,
+            "title": "The Hitchhikers Guide To The Galaxy"
+        },
+        "relationships": {
+            "author": {
+                "links": {
+                    "self": "/api/book/1/relationships/author",
+                    "related": "/api/book/1/author"
+                }
+            },
+            "bookClubLists": {
+                "links": {
+                    "self": "/api/book/1/relationships/bookClubLists",
+                    "related": "/api/book/1/bookClubLists"
+                }
+            },
+            "publisher": {
+                "links": {
+                    "self": "/api/book/1/relationships/publisher",
+                    "related": "/api/book/1/publisher"
+                }
+            },
+            "summary": {
+                "links": {
+                    "self": "/api/book/1/relationships/summary",
+                    "related": "/api/book/1/summary"
+                }
+            }
+        },
+        "links": {
+            "self": "/api/book/1"
+        }
+    }]
+}
